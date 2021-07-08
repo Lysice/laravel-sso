@@ -3,7 +3,7 @@
 namespace Lysice\LaravelSSO;
 
 use Illuminate\Support\ServiceProvider;
-use Zefy\LaravelSSO\Commands;
+use Lysice\LaravelSSO\Commands;
 
 class SSOServiceProvider extends ServiceProvider
 {

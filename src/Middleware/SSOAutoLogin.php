@@ -4,7 +4,7 @@ namespace Lysice\LaravelSSO\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Zefy\LaravelSSO\LaravelSSOBroker;
+use Lysice\LaravelSSO\LaravelSSOBroker;
 
 class SSOAutoLogin
 {

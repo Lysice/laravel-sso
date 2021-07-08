@@ -1,17 +1,17 @@
 # Simple PHP SSO integration for Laravel
 
-[![Latest Stable Version](https://poser.pugx.org/zefy/laravel-sso/v/stable)](https://packagist.org/packages/zefy/laravel-sso)
-[![Total Downloads](https://poser.pugx.org/zefy/laravel-sso/downloads)](https://packagist.org/packages/zefy/laravel-sso)
-[![Latest Unstable Version](https://poser.pugx.org/zefy/laravel-sso/v/unstable)](https://packagist.org/packages/zefy/laravel-sso)
-[![License](https://poser.pugx.org/zefy/laravel-sso/license)](https://packagist.org/packages/zefy/laravel-sso)
-[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/zefy/laravel-sso/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/zefy/laravel-sso/?branch=master)
-[![Build Status](https://scrutinizer-ci.com/g/zefy/laravel-sso/badges/build.png?b=master)](https://scrutinizer-ci.com/g/zefy/laravel-sso/build-status/master)
-[![Code Intelligence Status](https://scrutinizer-ci.com/g/zefy/laravel-sso/badges/code-intelligence.svg?b=master)](https://scrutinizer-ci.com/code-intelligence)
+[![Latest Stable Version](https://poser.pugx.org/Lysice/laravel-sso/v/stable)](https://packagist.org/packages/Lysice/laravel-sso)
+[![Total Downloads](https://poser.pugx.org/Lysice/laravel-sso/downloads)](https://packagist.org/packages/Lysice/laravel-sso)
+[![Latest Unstable Version](https://poser.pugx.org/Lysice/laravel-sso/v/unstable)](https://packagist.org/packages/Lysice/laravel-sso)
+[![License](https://poser.pugx.org/Lysice/laravel-sso/license)](https://packagist.org/packages/Lysice/laravel-sso)
+[![Scrutinizer Code Quality](https://scrutinizer-ci.com/g/Lysice/laravel-sso/badges/quality-score.png?b=master)](https://scrutinizer-ci.com/g/Lysice/laravel-sso/?branch=master)
+[![Build Status](https://scrutinizer-ci.com/g/Lysice/laravel-sso/badges/build.png?b=master)](https://scrutinizer-ci.com/g/Lysice/laravel-sso/build-status/master)
+[![Code Intelligence Status](https://scrutinizer-ci.com/g/Lysice/laravel-sso/badges/code-intelligence.svg?b=master)](https://scrutinizer-ci.com/code-intelligence)
 
 <p align="center"><img src="https://laravel.com/assets/img/components/logo-laravel.svg"></p>
 
 
-This package based on [Simple PHP SSO skeleton](https://github.com/zefy/php-simple-sso) package and made suitable for Laravel framework.
+This package based on [Simple PHP SSO skeleton](https://github.com/Lysice/php-simple-sso) package and made suitable for Laravel framework.
 ### Requirements
 * Laravel 5.5+
 * PHP 7.1+
@@ -91,7 +91,7 @@ SSO_BROKER_SECRET=
 
 
 
-Edit your `app/Http/Kernel.php` by adding `\Zefy\LaravelSSO\Middleware\SSOAutoLogin::class` middleware to `web` middleware group. It should look like this:
+Edit your `app/Http/Kernel.php` by adding `\Lysice\LaravelSSO\Middleware\SSOAutoLogin::class` middleware to `web` middleware group. It should look like this:
 ```php
 protected $middlewareGroups = [
         'web' => [

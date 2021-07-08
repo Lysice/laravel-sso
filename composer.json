@@ -1,5 +1,5 @@
 {
-    "name": "lysice/laravel-sso",
+    "name": "Lysice/laravel-sso",
     "description": "Simple PHP SSO integration for Laravel",
     "keywords": ["laravel", "sso", "authentication", "login"],
     "homepage": "https://github.com/Lysice/laravel-sso",
