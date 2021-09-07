@@ -4,7 +4,7 @@ namespace Lysice\LaravelSSO;
 
 use Illuminate\Support\Facades\Cookie;
 use Lysice\LaravelSSO\Exceptions\MissingConfigurationException;
-use Lysice\SimpleSSO\SSOBroker;
+use Zefy\SimpleSSO\SSOBroker;
 use GuzzleHttp;
 
 /**
