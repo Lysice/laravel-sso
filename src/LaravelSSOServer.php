@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Session;
-use Lysice\SimpleSSO\SSOServer;
+use Zefy\SimpleSSO\SSOServer;
 use Lysice\LaravelSSO\Resources\UserResource;
 
 class LaravelSSOServer extends SSOServer
