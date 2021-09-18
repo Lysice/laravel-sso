@@ -1,6 +1,8 @@
 <?php
 
 return [
+    // whether multi fields used for authentication
+    'multi_enabled' => env('SSO_MULTI_ENABLED', false),
     /*
      |--------------------------------------------------------------------------
      | Laravel SSO Settings

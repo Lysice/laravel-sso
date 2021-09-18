@@ -5,9 +5,11 @@ namespace Lysice\LaravelSSO\Controllers;
 use Illuminate\Routing\Controller as BaseController;
 use Illuminate\Http\Request;
 use Lysice\LaravelSSO\LaravelSSOServer;
+use Lysice\LaravelSSO\Traits\SSOControllerTrait;
 
 class ServerController extends BaseController
 {
+    use SSOControllerTrait;
     /**
      * @param Request $request
      * @param LaravelSSOServer $server

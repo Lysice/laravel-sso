@@ -6,11 +6,13 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Cache;
 use Illuminate\Support\Facades\Session;
+use Lysice\LaravelSSO\Traits\SSOServerTrait;
 use Zefy\SimpleSSO\SSOServer;
 use Lysice\LaravelSSO\Resources\UserResource;
 
 class LaravelSSOServer extends SSOServer
 {
+    use SSOServerTrait;
     /**
      * Redirect to provided URL with query string.
      *

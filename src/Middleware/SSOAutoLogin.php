@@ -18,7 +18,7 @@ class SSOAutoLogin
     public function handle(Request $request, Closure $next)
     {
         $broker = new LaravelSSOBroker();
-        $response = $broker->getUserInfo();
+        $response = $broker->handleGetUserInfo();
 
         // If client is logged out in SSO server but still logged in broker.
         if (!isset($response['data']) && !auth()->guest()) {
