@@ -4,6 +4,20 @@ namespace Lysice\LaravelSSO\Traits;
 
 trait SSOBrokerTrait {
     /**
+     * api check login. support for social sso check.
+     * @param string $flag
+     * @return mixed
+     */
+    public function check($flag = '')
+    {
+        $this->userInfo = $this->makeRequest('POST', 'check', [
+            'flag' => $flag
+        ]);
+
+        return $this->userInfo;
+    }
+
+    /**
      * Login client to SSO server with user credentials.
      *
      * @param string $username

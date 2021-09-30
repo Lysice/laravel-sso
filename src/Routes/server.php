@@ -14,4 +14,8 @@ Route::middleware('api')->prefix('api/sso')->group(function () {
         Route::post('login', 'Lysice\LaravelSSO\Controllers\ServerController@login');
         Route::get('userInfo', 'Lysice\LaravelSSO\Controllers\ServerController@userInfo');
     }
+
+    if(config('laravel-sso.api.enabled')) {
+        Route::post('wechatCheck', 'Lysice\LaravelSSO\Controllers\ServerController@check');
+    }
 });

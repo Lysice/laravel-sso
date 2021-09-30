@@ -1,8 +1,6 @@
 <?php
 
 return [
-    // whether multi fields used for authentication
-    'multi_enabled' => env('SSO_MULTI_ENABLED', false),
     /*
      |--------------------------------------------------------------------------
      | Laravel SSO Settings
@@ -37,6 +35,9 @@ return [
         'id' => 'id',
     ],
 
+    // whether multi fields used for authentication
+    'multi_enabled' => env('SSO_MULTI_ENABLED', false),
+
     /*
      |--------------------------------------------------------------------------
      | Settings necessary for the SSO broker.
@@ -49,4 +50,12 @@ return [
     'serverUrl' => env('SSO_SERVER_URL', null),
     'brokerName' => env('SSO_BROKER_NAME', null),
     'brokerSecret' => env('SSO_BROKER_SECRET', null),
+    'api' => [
+        'enabled' => env('SSO_API_ENABLED', false),
+        // wechat result merged extra data callback
+        'getMerged' => ['uses' => 'xxx@getMerged'],
+        // wechat userId
+        'getUserId' => ['uses' => 'xxx@getUserId'],
+        'getPassword' => ['uses' => 'xxx@getPassword']
+    ]
 ];
