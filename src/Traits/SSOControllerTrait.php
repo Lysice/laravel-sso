@@ -55,18 +55,6 @@ trait SSOControllerTrait
     }
 
     /**
-     * get data from extra config functions
-     * @param $functionArr
-     * @param $parameters
-     * @return mixed
-     */
-    private function callConfigFunction($functionArr, $parameters)
-    {
-        $callable = explode('@', $functionArr['uses']);
-        return call_user_func([$callable[0], $callable[1]], $parameters);
-    }
-
-    /**
      * api check
      * @param Request $request
      * @param LaravelSSOServer $server
@@ -80,7 +68,7 @@ trait SSOControllerTrait
             return $this->response([], 204, 'the login key required.');
         }
         // get userId
-        $userId = $this->callConfigFunction(config('laravel-sso.api.getUserId'), ['flag' => $flag]);
+        $userId = callConfigFunction(config('laravel-sso.api.getUserId'), ['flag' => $flag]);
 
         if(empty($userId)) {
             return $this->response([], 201, 'cannot find user_id or the user has not logged in.');
@@ -93,7 +81,7 @@ trait SSOControllerTrait
         }
 
         // handle login
-        $password = $this->callConfigFunction(config('laravel-sso.api.getPassword'), $user);
+        $password = callConfigFunction(config('laravel-sso.api.getPassword'), $user);
         if(config('laravel-sso.multi_enabled')) {
             $result = $server->loginMulti(
                 $user->username,
@@ -106,7 +94,7 @@ trait SSOControllerTrait
 
         // sso-login hack
         event(new ApiSSOLoginEvent($user, $flag));
-        $merged = $this->callConfigFunction(config('laravel-sso.api.getMerged'), ['flag' => $flag]);
+        $merged = callConfigFunction(config('laravel-sso.api.getMerged'), ['flag' => $flag]);
 
         if($result instanceof UserResource) {
             $result = $result->toArray($request);

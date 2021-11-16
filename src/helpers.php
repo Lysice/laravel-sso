@@ -16,3 +16,16 @@ if (! function_exists('str_random')) {
         return \Illuminate\Support\Str::random($length);
     }
 }
+if (!function_exists('callConfigFunction')) {
+    /**
+     * get data from extra config functions
+     * @param $functionArr
+     * @param $parameters
+     * @return mixed
+     */
+    function callConfigFunction($functionArr, $parameters)
+    {
+        $callable = explode('@', $functionArr['uses']);
+        return call_user_func([$callable[0], $callable[1]], $parameters);
+    }
+}
