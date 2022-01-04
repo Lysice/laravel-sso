@@ -66,16 +66,6 @@ class ServerController extends BaseController
      *
      * @return string
      */
-    public function logout(LaravelSSOServer $server)
-    {
-        return $server->logout();
-    }
-
-    /**
-     * @param LaravelSSOServer $server
-     *
-     * @return string
-     */
     public function userInfo(LaravelSSOServer $server)
     {
         return $server->userInfo();
