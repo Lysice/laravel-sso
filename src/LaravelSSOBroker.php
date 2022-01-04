@@ -94,10 +94,10 @@ class LaravelSSOBroker extends SSOBroker
      * @param string $method Request method 'post' or 'get'.
      * @param string $command Request command name.
      * @param array $parameters Parameters for URL query string if GET request and form parameters if it's POST request.
-     *
+     * @param array $cookies
      * @return array
      */
-    protected function makeRequest(string $method, string $command, array $parameters = [])
+    protected function makeRequest(string $method, string $command, array $parameters = [], array $cookies = [])
     {
         $commandUrl = $this->generateCommandUrl($command);
 
@@ -116,6 +116,10 @@ class LaravelSSOBroker extends SSOBroker
             default:
                 $body = [];
                 break;
+        }
+
+        if (!empty($cookies)) {
+            $body[GuzzleHttp\RequestOptions::COOKIES] = GuzzleHttp\Cookie\CookieJar::fromArray($cookies, 'wangan.com');
         }
 
         $client = new GuzzleHttp\Client;
