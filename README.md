@@ -144,6 +144,8 @@ SSO_BROKER_SECRET=892asjdajsdksja74jh38kljk2929023
 
 
 
+
+
 ### Multiple mode
 
 you can use the multiple mode by using like this:  
@@ -165,11 +167,6 @@ when `multi_enabled` is true you can use the multi mode.
 ```
 protected function attemptLogin(Request $request)
     {
-        $redirect = $request->get('redirect');
-        if(!empty($redirect)) {
-            $this->redirectBack = $redirect;
-        }
-
         $broker = new LaravelSSOBroker();
         $credentials = $this->credentials($request);
 		// this is your own field.
@@ -185,6 +182,22 @@ protected function attemptLogin(Request $request)
 login_key //your login key
 username  //your login key value
 password  // your login key password
+```
+
+or you can change the name of `login_key` to other key name like  `login_name`
+
+ then you need to change the `loginKey`'s name in `attemptLogin` function like this:
+
+```
+protected function attemptLogin(Request $request)
+    {
+        $broker = new LaravelSSOBroker();
+        $credentials = $this->credentials($request);
+		// this is your own field. 
+        $loginKey = $request->input('login_name', '');
+
+        return $broker->handleLogin($credentials[$this->username()], $credentials['password'], $loginKey);
+    }
 ```
 
 
