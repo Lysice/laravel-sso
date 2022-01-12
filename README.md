@@ -42,9 +42,9 @@ Create table where all brokers will be saved.
 $ php artisan migrate --path=vendor/Lysice/laravel-sso/database/migrations
 ```
 
-
 Edit your `app/Http/Kernel.php` by removing throttle middleware and adding sessions middleware to `api` middlewares array.
 This is necessary because we need sessions to work in API routes and throttle middleware can block connections which we need.
+
 ```php
 'api' => [
     'bindings',
@@ -141,3 +141,64 @@ SSO_SERVER_URL=https://server.test
 SSO_BROKER_NAME=site1
 SSO_BROKER_SECRET=892asjdajsdksja74jh38kljk2929023
 ```
+
+
+
+### Multiple mode
+
+you can use the multiple mode by using like this:  
+
+you must use the newest version to use this feature.
+
+- In `server` and `client`'s config file `laravel-sso.php` 
+
+```
+'multi_enabled' => env('SSO_MULTI_ENABLED', false),
+```
+
+
+
+when `multi_enabled` is true you can use the multi mode.
+
+- In `LoginController.php` you need rewrite the function `attemptLogin`
+
+```
+protected function attemptLogin(Request $request)
+    {
+        $redirect = $request->get('redirect');
+        if(!empty($redirect)) {
+            $this->redirectBack = $redirect;
+        }
+
+        $broker = new LaravelSSOBroker();
+        $credentials = $this->credentials($request);
+		// this is your own field.
+        $loginKey = $request->input('login_key', '');
+
+        return $broker->handleLogin($credentials[$this->username()], $credentials['password'], $loginKey);
+    }
+```
+
+- your blade/js send the request with params:
+
+```
+login_key //your login key
+username  //your login key value
+password  // your login key password
+```
+
+
+
+
+
+In `laravel-sso` it will send a request like this:
+
+```
+$this->userInfo = $this->makeRequest('POST', 'loginMulti', [
+            $key => $keyValue,
+            'password' => $password,
+            'key' => $key
+        ]);
+```
+
+And your own key `login_key` 's value will be used for authentication.
