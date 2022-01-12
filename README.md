@@ -152,15 +152,21 @@ you can use the multiple mode by using like this:
 
 you must use the newest version to use this feature.
 
-- In `server` and `client`'s config file `laravel-sso.php` 
+- In `server` and `client`'s config file `laravel-sso.php`  `multi_enabled` option must be true:
 
 ```
 'multi_enabled' => env('SSO_MULTI_ENABLED', false),
 ```
 
+in .env file:
 
+```
+SSO_MULTI_ENABLED=true
+```
 
 when `multi_enabled` is true you can use the multi mode.
+
+
 
 - In `LoginController.php` you need rewrite the function `attemptLogin`
 
