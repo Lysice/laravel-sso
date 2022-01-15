@@ -221,3 +221,10 @@ $this->userInfo = $this->makeRequest('POST', 'loginMulti', [
 ```
 
 And your own key `login_key` 's value will be used for authentication.
+
+
+
+### Thanks to these company's Support
+
+![https://JetBrains.com?from=laravel-sso](https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg)
+
