@@ -5,9 +5,25 @@
  */
 
 Route::middleware('api')->prefix('api/sso')->group(function () {
-    Route::post('logout', 'Lysice\LaravelSSO\Controllers\ServerController@logout');
-    Route::get('attach', 'Lysice\LaravelSSO\Controllers\ServerController@attach');
-    Route::post('attach', 'Lysice\LaravelSSO\Controllers\ServerController@attach');
+    $supports = config('laravel-sso.supports');
+    foreach ($supports['attach'] as $method) {
+        if (strcmp($method, 'GET')) {
+            Route::get('attach', 'Lysice\LaravelSSO\Controllers\ServerController@attach');
+        }
+        if (strcmp($method, 'POST')) {
+            Route::post('attach', 'Lysice\LaravelSSO\Controllers\ServerController@attach');
+        }
+    }
+    foreach ($supports['logout'] as $method) {
+        if (strcmp($method, 'GET')) {
+            Route::get('logout', 'Lysice\LaravelSSO\Controllers\ServerController@logout');
+        }
+        if (strcmp($method, 'POST')) {
+            Route::post('logout', 'Lysice\LaravelSSO\Controllers\ServerController@logout');
+        }
+
+    }
+
     if(config('laravel-sso.multi_enabled')) {
         Route::get('userInfoMulti', 'Lysice\LaravelSSO\Controllers\ServerController@userInfoMulti');
         Route::post('loginMulti', 'Lysice\LaravelSSO\Controllers\ServerController@loginMulti');
