@@ -23,6 +23,23 @@ This package based on [Simple PHP SSO skeleton](https://github.com/Lysice/php-si
 ### How it works?
 Client visits Broker and unique token is generated. When new token is generated we need to attach Client session to his session in Broker so he will be redirected to Server and back to Broker at this moment new session in Server will be created and associated with Client session in Broker's page. When Client visits other Broker same steps will be done except that when Client will be redirected to Server he already use his old session and same session id which associated with Broker#1.
 
+### Some tips before
+- sometimes 429 occurs when you send more requests
+  The answer is that `api` middleware group use `ThrottleRequests` middleware aliased by `throttle`. You need to remove it or increase the number of throttle like `'throttle:600,1`.
+- 405 exceptions occurs when POST or other METHOD execute before attach.
+  Version1.7.6 Now You can set the methods what the `attach` route supports. 
+  You can doing this just like it in `laravel-sso.php` below:
+  ```
+  'supports' => [
+          'attach' => [
+              'GET'
+          ],
+          'logout' => [
+              'POST'
+          ]
+      ],
+  ```
+  
 # Installation
 ### Server
 Install this package using composer.
@@ -227,4 +244,3 @@ And your own key `login_key` 's value will be used for authentication.
 ### Thanks to these company's Support
 
 ![https://JetBrains.com?from=laravel-sso](https://resources.jetbrains.com/storage/products/company/brand/logos/jb_beam.svg)
-
