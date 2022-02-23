@@ -7,18 +7,18 @@
 Route::middleware('api')->prefix('api/sso')->group(function () {
     $supports = config('laravel-sso.supports');
     foreach ($supports['attach'] as $method) {
-        if (strcmp($method, 'GET')) {
+        if (strcmp($method, 'GET') == 0) {
             Route::get('attach', 'Lysice\LaravelSSO\Controllers\ServerController@attach');
         }
-        if (strcmp($method, 'POST')) {
+        if (strcmp($method, 'POST') == 0) {
             Route::post('attach', 'Lysice\LaravelSSO\Controllers\ServerController@attach');
         }
     }
     foreach ($supports['logout'] as $method) {
-        if (strcmp($method, 'GET')) {
+        if (strcmp($method, 'GET') == 0) {
             Route::get('logout', 'Lysice\LaravelSSO\Controllers\ServerController@logout');
         }
-        if (strcmp($method, 'POST')) {
+        if (strcmp($method, 'POST') == 0) {
             Route::post('logout', 'Lysice\LaravelSSO\Controllers\ServerController@logout');
         }
 
