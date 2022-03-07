@@ -2,15 +2,7 @@
 
 namespace Lysice\LaravelSSO\Traits;
 
-use Illuminate\Http\Request;
-
 trait SSOBrokerTrait {
-    public function logoutWithCookie(Request $request)
-    {
-        $cookies = $request->cookie();
-        $this->makeRequest('POST', 'logout', [], $cookies);
-    }
-
     /**
      * api check login. support for social sso check.
      * @param string $flag
@@ -30,15 +22,17 @@ trait SSOBrokerTrait {
      *
      * @param string $username
      * @param string $password
-     *
+     * @param string $key
+     * @param array $extendData
      * @return bool
      */
-    public function loginMulti(string $keyValue, string $password, string $key)
+    public function loginMulti(string $keyValue, string $password, string $key, array $extendData)
     {
         $this->userInfo = $this->makeRequest('POST', 'loginMulti', [
             $key => $keyValue,
             'password' => $password,
-            'key' => $key
+            'key' => $key,
+            'extendData' => $extendData
         ]);
 
         if (!isset($this->userInfo['error']) && isset($this->userInfo['data']['id'])) {
@@ -65,12 +59,14 @@ trait SSOBrokerTrait {
     /**
      * @param array $credentials
      * @param string $loginKey
+     * @param string $loginKey
+     * @param array $extendData
      * @return bool
      */
-    public function handleLogin($credentialUuid, $credentialPassword, $loginKey = '')
+    public function handleLogin($credentialUuid, $credentialPassword, $loginKey = '', $extendData = [])
     {
         if(config('laravel-sso.multi_enabled')) {
-            return $this->loginMulti($credentialUuid, $credentialPassword, $loginKey);
+            return $this->loginMulti($credentialUuid, $credentialPassword, $loginKey, $extendData);
         }
 
         return $this->login($credentialUuid, $credentialPassword);

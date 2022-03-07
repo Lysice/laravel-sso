@@ -5,6 +5,7 @@ namespace Lysice\LaravelSSO\Traits;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
+use Lysice\LaravelSSO\Events\SSOLoginEvent;
 use Zefy\SimpleSSO\Exceptions\SSOServerException;
 
 trait SSOServerTrait {
@@ -12,10 +13,11 @@ trait SSOServerTrait {
      * @param null|string $username
      * @param null|string $password
      * @param null|string $key
+     * @param null | array $extendData
      *
      * @return string
      */
-    public function loginMulti(?string $keyValue, ?string $password, ?string $key)
+    public function loginMulti(?string $keyValue, ?string $password, ?string $key, ?array $extendData)
     {
         try {
             $this->startBrokerSession();
@@ -32,7 +34,8 @@ trait SSOServerTrait {
         }
 
         $this->setSessionData('sso_user', $userId);
-
+        // hack
+        event(new SSOLoginEvent($userId, $extendData));
         return $this->userInfoMulti();
     }
 
