@@ -87,7 +87,8 @@ trait SSOControllerTrait
             $result = $server->loginMulti(
                 $user->username,
                 $password,
-                'username'
+                'username',
+                []
             );
         } else {
             $result = $server->login($user->username, $password);
