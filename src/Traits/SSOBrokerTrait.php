@@ -1,8 +1,13 @@
 <?php
 
 namespace Lysice\LaravelSSO\Traits;
-
+use Illuminate\Http\Request;
 trait SSOBrokerTrait {
+    public function logoutWithCookie(Request $request)
+    {
+        $cookies = $request->cookie();
+        $this->makeRequest('POST', 'logout', [], $cookies);
+    }
     /**
      * api check login. support for social sso check.
      * @param string $flag
