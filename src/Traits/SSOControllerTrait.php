@@ -32,7 +32,8 @@ trait SSOControllerTrait
         return $server->loginMulti(
             $request->get($key, null),
             $request->get('password', null),
-            $request->get('key', null)
+            $request->get('key', null),
+            $request->get('extendData', null)
         );
     }
 
