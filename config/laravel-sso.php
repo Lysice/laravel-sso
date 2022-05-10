@@ -37,14 +37,10 @@ return [
 
     // whether multi fields used for authentication
     'multi_enabled' => env('SSO_MULTI_ENABLED', false),
-    'supports' => [
-        'attach' => [
-            'GET'
-        ],
-        'logout' => [
-            'POST'
-        ]
-    ],
+
+    // server session expire time
+    // default: 1 for one hour
+    'expired_time' => env('SSO_BROKER_SESSION_EXPIRED_TIME', 1),
 
     /*
      |--------------------------------------------------------------------------
