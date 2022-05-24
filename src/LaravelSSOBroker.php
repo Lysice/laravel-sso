@@ -169,7 +169,6 @@ class LaravelSSOBroker extends SSOBroker
     {
         // Cookie name based on broker's name because there can be some brokers on same domain
         // and we need to prevent duplications.
-        $prefix = config('laravel-sso.tokenPrefix');
         if(empty($prefix)) {
             return 'sso_token_' . preg_replace('/[_\W]+/', '_', strtolower($this->brokerName));
         } else {
