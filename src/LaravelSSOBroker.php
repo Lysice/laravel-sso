@@ -4,8 +4,8 @@ namespace Lysice\LaravelSSO;
 
 use Illuminate\Support\Facades\Cookie;
 use Lysice\LaravelSSO\Exceptions\MissingConfigurationException;
-use Zefy\SimpleSSO\SSOBroker;
 use Lysice\LaravelSSO\Traits\SSOBrokerTrait;
+use Zefy\SimpleSSO\SSOBroker;
 use GuzzleHttp;
 
 /**
@@ -94,10 +94,10 @@ class LaravelSSOBroker extends SSOBroker
      * @param string $method Request method 'post' or 'get'.
      * @param string $command Request command name.
      * @param array $parameters Parameters for URL query string if GET request and form parameters if it's POST request.
-     * @param array $cookies
+     *
      * @return array
      */
-    protected function makeRequest(string $method, string $command, array $parameters = [], array $cookies = [])
+    protected function makeRequest(string $method, string $command, array $parameters = [])
     {
         $commandUrl = $this->generateCommandUrl($command);
 
@@ -116,10 +116,6 @@ class LaravelSSOBroker extends SSOBroker
             default:
                 $body = [];
                 break;
-        }
-
-        if (!empty($cookies)) {
-            $body[GuzzleHttp\RequestOptions::COOKIES] = GuzzleHttp\Cookie\CookieJar::fromArray($cookies, 'wangan.com');
         }
 
         $client = new GuzzleHttp\Client;
@@ -173,6 +169,11 @@ class LaravelSSOBroker extends SSOBroker
     {
         // Cookie name based on broker's name because there can be some brokers on same domain
         // and we need to prevent duplications.
-        return 'sso_token_' . preg_replace('/[_\W]+/', '_', strtolower($this->brokerName));
+        $prefix = config('laravel-sso.tokenPrefix');
+        if(empty($prefix)) {
+            return 'sso_token_' . preg_replace('/[_\W]+/', '_', strtolower($this->brokerName));
+        } else {
+            return $prefix . '_sso_token_' . preg_replace('/[_\W]+/', '_', strtolower($this->brokerName));
+        }
     }
 }

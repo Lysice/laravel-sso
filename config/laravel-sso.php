@@ -13,7 +13,11 @@ return [
      */
 
     'type' => 'server',
-
+    /**
+     * the prefix of sso token.
+     * default:sso_token_{brokerName}
+     */
+    'tokenPrefix' => '',
     /*
      |--------------------------------------------------------------------------
      | Settings necessary for the SSO server.
