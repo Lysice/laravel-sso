@@ -6,7 +6,8 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Lysice\LaravelSSO\Events\SSOLoginEvent;
-use Zefy\SimpleSSO\Exceptions\SSOServerException;
+use Lysice\SimpleSSO\Constants;
+use Lysice\SimpleSSO\Exceptions\SSOServerException;
 
 trait SSOServerTrait {
     /**
@@ -23,11 +24,11 @@ trait SSOServerTrait {
             $this->startBrokerSession();
 
             if (!$keyValue || !$password) {
-                $this->fail('No keyVale and/or password provided.');
+                $this->fail('No keyVale and/or password provided.', false, Constants::CODE_NO_USERNAME_OR_PASSWORD_PROVIDED);
             }
 
             if (!$userId = $this->authenticateMulti($keyValue, $password, $key)) {
-                $this->fail('User authentication failed.');
+                $this->fail('User authentication failed.', false, Constants::CODE_AUTH_FAILED);
             }
         } catch (SSOServerException $e) {
             return $this->returnJson(['error' => $e->getMessage()]);
@@ -52,11 +53,11 @@ trait SSOServerTrait {
             $userId = $this->getSessionData('sso_user');
 
             if (!$userId) {
-                $this->fail('User not authenticated. Session ID: ' . $this->getSessionData('id'));
+                $this->fail('User not authenticated. Session ID: ' . $this->getSessionData('id'), false, Constants::CODE_USER_NOT_LOGIN);
             }
 
             if (!$user = $this->getUserInfoMulti($userId)) {
-                $this->fail('User not found.');
+                $this->fail('User not found.', false, Constants::CODE_USER_NOT_FOUND);
             }
         } catch (SSOServerException $e) {
             return $this->returnJson(['error' => $e->getMessage()]);
