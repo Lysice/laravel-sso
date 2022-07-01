@@ -4,6 +4,7 @@ namespace Lysice\LaravelSSO\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Lysice\LaravelSSO\LaravelSSOBroker;
 
 class SSOAutoLogin
@@ -55,11 +56,15 @@ class SSOAutoLogin
      * Need to make a page refresh because current page may be accessible only for authenticated users.
      *
      * @param Request $request
+     * @param LaravelSSOBroker $broker
      * @return \Illuminate\Http\RedirectResponse
      */
-    protected function logout(Request $request)
+    protected function logout(Request $request, LaravelSSOBroker $broker)
     {
-        auth()->logout();
+        $broker->logoutWithCookie($request);
+        Auth::guard()->logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
         return redirect($request->fullUrl());
     }
 }
