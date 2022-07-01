@@ -68,6 +68,8 @@ class LaravelSSOServer extends SSOServer
      */
     protected function authenticate(string $username, string $password)
     {
+        $where = config('laravel-sso.userWhere');
+        $where = array_merge($where, ['username' => $username, 'password' => $password]);
         if (!Auth::attempt(['username' => $username, 'password' => $password])) {
             return false;
         }
@@ -108,8 +110,17 @@ class LaravelSSOServer extends SSOServer
      */
     protected function getUserInfo(string $username)
     {
+        $where = config('laravel-sso.userWhere');
+
         try {
-            $user = config('laravel-sso.usersModel')::where('username', $username)->firstOrFail();
+            $user = config('laravel-sso.usersModel')::where('username', $username)
+                ->when($where, function ($query) use ($where) {
+                    foreach ($where as $key => $val) {
+                        $query->where($key, $val);
+                    }
+                    return $query;
+                })
+                ->firstOrFail();
         } catch (ModelNotFoundException $e) {
             return null;
         }

@@ -76,7 +76,15 @@ trait SSOServerTrait {
     protected function getUserInfoMulti(string $userId)
     {
         try {
-            $user = config('laravel-sso.usersModel')::where('id', $userId)->firstOrFail();
+            $where = config('laravel-sso.userWhere');
+            $user = config('laravel-sso.usersModel')::where('id', $userId)
+                ->when($where, function ($query) use ($where) {
+                    foreach ($where as $key => $value) {
+                        $query->where($key, $value);
+                    }
+                    return $query;
+                })
+                ->firstOrFail();
         } catch (ModelNotFoundException $e) {
             return null;
         }
@@ -86,7 +94,9 @@ trait SSOServerTrait {
 
     protected function authenticateMulti(string $value, string $password, string $key)
     {
-        if(!Auth::attempt([$key => $value, 'password' => $password])) {
+        $where = config('laravel-sso.userWhere');
+        $where = array_merge($where, [$key => $value, 'password' => $password]);
+        if(!Auth::attempt($where)) {
             return false;
         }
 
