@@ -1,5 +1,5 @@
 <?php
-
+use Illuminate\Support\Facades\Cache;
 return [
     /*
      |--------------------------------------------------------------------------
@@ -13,10 +13,7 @@ return [
      */
 
     'type' => 'server',
-    /**
-     * the prefix of sso token.
-     * default:sso_token_{brokerName}
-     */
+
     /*
      |--------------------------------------------------------------------------
      | Settings necessary for the SSO server.
@@ -32,15 +29,36 @@ return [
     // Table used in Lysice\LaravelSSO\Models\Broker model
     'brokersTable' => 'brokers',
 
+    'userWhere' => [
+        // auth condition like this.it will be used for user select sql.
+        // for example before the sql is select * from user where username = xxx and password = xx
+        // now it will be select * from user where username = xxx and password = xx and status = normal
+        // 'status' => 'normal'
+    ],
+    // whether enabled where condition when get userInfo
+    'userInfoWhereEnabled' => false,
     // Logged in user fields sent to brokers.
     'userFields' => [
         // Return array field name => database column name
         'id' => 'id',
     ],
 
-    // whether multi fields used for authentication
     'multi_enabled' => env('SSO_MULTI_ENABLED', false),
-
+    'redirectTo' => '/',
+    //        'attach' => [
+    //            'GET','POST'
+    //        ],
+    //        'logout' => [
+    //            'POST'
+    //        ]
+    'supports' => [
+        'attach' => [
+            'GET','POST'
+        ],
+        'logout' => [
+            'POST'
+        ]
+    ],
     // server session expire time
     // default: 1 for one hour
     'expired_time' => env('SSO_BROKER_SESSION_EXPIRED_TIME', 1),
@@ -57,12 +75,21 @@ return [
     'serverUrl' => env('SSO_SERVER_URL', null),
     'brokerName' => env('SSO_BROKER_NAME', null),
     'brokerSecret' => env('SSO_BROKER_SECRET', null),
+
+    /*
+     |--------------------------------------------------------------------------
+     | Settings necessary for the wechat if you need wechat-scan-sso
+     |--------------------------------------------------------------------------
+     |
+     | These settings should be changed if you use api check support
+     |
+     */
     'api' => [
         'enabled' => env('SSO_API_ENABLED', false),
         // wechat result merged extra data callback
-        'getMerged' => ['uses' => 'xxx@getMerged'],
+        'getMerged' => ['uses' => '\App\Services\SSOService@getMerged'],
         // wechat userId
-        'getUserId' => ['uses' => 'xxx@getUserId'],
-        'getPassword' => ['uses' => 'xxx@getPassword']
+        'getUserId' => ['uses' => '\App\Services\SSOService@getUserId'],
+        'getPassword' => ['uses' => '\App\Services\SSOService@getPassword']
     ]
 ];
