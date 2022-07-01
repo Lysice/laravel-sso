@@ -76,7 +76,11 @@ trait SSOServerTrait {
     protected function getUserInfoMulti(string $userId)
     {
         try {
-            $where = config('laravel-sso.userWhere');
+            $where = false;
+            if (config('laravel-sso.userInfoWhereEnabled')) {
+                $where = config('laravel-sso.userWhere');
+            }
+
             $user = config('laravel-sso.usersModel')::where('id', $userId)
                 ->when($where, function ($query) use ($where) {
                     foreach ($where as $key => $value) {

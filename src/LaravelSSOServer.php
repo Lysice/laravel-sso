@@ -70,7 +70,7 @@ class LaravelSSOServer extends SSOServer
     {
         $where = config('laravel-sso.userWhere');
         $where = array_merge($where, ['username' => $username, 'password' => $password]);
-        if (!Auth::attempt(['username' => $username, 'password' => $password])) {
+        if (!Auth::attempt($where)) {
             return false;
         }
 
@@ -110,7 +110,10 @@ class LaravelSSOServer extends SSOServer
      */
     protected function getUserInfo(string $username)
     {
-        $where = config('laravel-sso.userWhere');
+        $where = false;
+        if (config('laravel-sso.userInfoWhereEnabled')) {
+            $where = config('laravel-sso.userWhere');
+        }
 
         try {
             $user = config('laravel-sso.usersModel')::where('username', $username)
