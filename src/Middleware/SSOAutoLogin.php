@@ -23,7 +23,7 @@ class SSOAutoLogin
 
         // If client is logged out in SSO server but still logged in broker.
         if (!isset($response['data']) && !auth()->guest()) {
-            return $this->logout($request);
+            return $this->logout($request, $broker);
         }
 
         // If there is a problem with data in SSO server, we will re-attach client session.
