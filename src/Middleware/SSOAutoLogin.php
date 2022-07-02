@@ -4,6 +4,7 @@ namespace Lysice\LaravelSSO\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 use Illuminate\Support\Facades\Auth;
 use Lysice\LaravelSSO\LaravelSSOBroker;
 
@@ -72,5 +73,35 @@ class SSOAutoLogin
         if ($redirect) {
             return redirect($request->fullUrl());
         }
+    }
+
+    /**
+     * Logging out authenticated user.
+     * Need to return your own response
+     * @param Request $request
+     * @param LaravelSSOBroker $broker
+     * @param bool $regenerate
+     * @param Closure|null $returnHandler
+     * @return \Illuminate\Http\JsonResponse|mixed
+     */
+    protected function apiLogout(Request $request, LaravelSSOBroker $broker, $regenerate = true, \Closure $returnHandler = null) {
+        $broker->logoutWithCookie($request);
+        Auth::guard()->logout();
+        if ($regenerate) {
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+        }
+
+        if (is_null($returnHandler)) {
+            return response()->json([
+                'error_code' => 401,
+                'error_message' => '您已退出登录',
+                'data' => [],
+                'message' => '您已退出登录',
+                'code' => 200
+            ]);
+        }
+
+        return $returnHandler();
     }
 }
