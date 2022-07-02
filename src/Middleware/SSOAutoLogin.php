@@ -54,17 +54,23 @@ class SSOAutoLogin
     /**
      * Logging out authenticated user.
      * Need to make a page refresh because current page may be accessible only for authenticated users.
-     *
      * @param Request $request
      * @param LaravelSSOBroker $broker
-     * @return \Illuminate\Http\RedirectResponse
+     * @param bool $redirect
+     * @param bool $regenerate
+     * @return \Illuminate\Http\RedirectResponse|\Illuminate\Routing\Redirector
      */
-    protected function logout(Request $request, LaravelSSOBroker $broker)
+    protected function logout(Request $request, LaravelSSOBroker $broker, $redirect = true, $regenerate = true)
     {
         $broker->logoutWithCookie($request);
         Auth::guard()->logout();
-        $request->session()->invalidate();
-        $request->session()->regenerateToken();
-        return redirect($request->fullUrl());
+        if ($regenerate) {
+            $request->session()->invalidate();
+            $request->session()->regenerateToken();
+        }
+
+        if ($redirect) {
+            return redirect($request->fullUrl());
+        }
     }
 }
