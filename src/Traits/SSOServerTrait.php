@@ -31,7 +31,7 @@ trait SSOServerTrait {
                 $this->fail('User authentication failed.', false, Constants::CODE_AUTH_FAILED);
             }
         } catch (SSOServerException $e) {
-            return $this->returnJson(['error' => $e->getMessage()]);
+            return $this->returnJson(['error' => $e->getMessage(), 'code' => $e->getCode()]);
         }
 
         $this->setSessionData('sso_user', $userId);
@@ -60,7 +60,7 @@ trait SSOServerTrait {
                 $this->fail('User not found.', false, Constants::CODE_USER_NOT_FOUND);
             }
         } catch (SSOServerException $e) {
-            return $this->returnJson(['error' => $e->getMessage()]);
+            return $this->returnJson(['error' => $e->getMessage(), 'code' => $e->getCode()]);
         }
 
         return $this->returnUserInfo($user);
