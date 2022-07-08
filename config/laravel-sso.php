@@ -30,27 +30,28 @@ return [
     'brokersTable' => 'brokers',
 
     'userWhere' => [
-        // auth condition like this.it will be used for user select sql.
-        // for example before the sql is select * from user where username = xxx and password = xx
-        // now it will be select * from user where username = xxx and password = xx and status = normal
-        // 'status' => 'normal'
+        'status' => 'normal'
     ],
-    // whether enabled where condition when get userInfo
     'userInfoWhereEnabled' => false,
+
     // Logged in user fields sent to brokers.
     'userFields' => [
         // Return array field name => database column name
         'id' => 'id',
+        'username' => 'username',
+        'email' => 'email',
+        'mobile' => 'mobile',
+        'image_url' => 'avatar',
+        'nickname' => 'nickname',
+        'status' => 'status',
+        'uuid' => 'uuid',
+        'cert_type' => 'cert_type',
+        'has_blog' => 'has_blog',
+        'blog_slug' => 'blog_slug'
     ],
 
     'multi_enabled' => env('SSO_MULTI_ENABLED', false),
     'redirectTo' => '/',
-    //        'attach' => [
-    //            'GET','POST'
-    //        ],
-    //        'logout' => [
-    //            'POST'
-    //        ]
     'supports' => [
         'attach' => [
             'GET','POST'
@@ -62,6 +63,7 @@ return [
     // server session expire time
     // default: 1 for one hour
     'expired_time' => env('SSO_BROKER_SESSION_EXPIRED_TIME', 1),
+
 
     /*
      |--------------------------------------------------------------------------
@@ -75,13 +77,15 @@ return [
     'serverUrl' => env('SSO_SERVER_URL', null),
     'brokerName' => env('SSO_BROKER_NAME', null),
     'brokerSecret' => env('SSO_BROKER_SECRET', null),
-
+    // broker cookie token expire time
+    // default: 1 for one hour
+    'token_expired_at' => env('SSO_BROKER_TOKEN_EXPIRED_AT', 1),
     /*
      |--------------------------------------------------------------------------
      | Settings necessary for the wechat if you need wechat-scan-sso
      |--------------------------------------------------------------------------
      |
-     | These settings should be changed if you use api check support
+     | These settings should be changed if this page is working as SSO broker.
      |
      */
     'api' => [

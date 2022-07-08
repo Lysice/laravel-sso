@@ -71,7 +71,8 @@ class LaravelSSOBroker extends SSOBroker
 
         // If cookie token doesn't exist, we need to create it with unique token...
         $this->token = str_random(40);
-        Cookie::queue(Cookie::make($this->getCookieName(), $this->token, 60));
+        $hour = config('laravel-sso.token_expired_at', 1);
+        Cookie::queue(Cookie::make($this->getCookieName(), $this->token, $hour * 60));
 
         // ... and attach it to broker session in SSO server.
         $this->attach();
