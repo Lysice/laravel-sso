@@ -16,10 +16,13 @@ class UserResource extends JsonResource
     {
         $fields = [];
         foreach (config('laravel-sso.userFields') as $key => $value) {
-            if ($value instanceof \Closure) {
-                $fields[$key] = $value($value);
+            if (is_array($value)) {
+                $fields[$key] = $value['call']($this->{$value['value']});
+            } else if ($value instanceof \Closure) {
+                $fields[$key] = $value($key);
+            } else {
+                $fields[$key] = $this->{$value};
             }
-            $fields[$key] = $this->{$value};
         }
         $merged = callConfigFunction(config('laravel-sso.api.getMerged'), [
             'user' => $this->resource
