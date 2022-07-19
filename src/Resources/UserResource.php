@@ -16,6 +16,9 @@ class UserResource extends JsonResource
     {
         $fields = [];
         foreach (config('laravel-sso.userFields') as $key => $value) {
+            if ($value instanceof \Closure) {
+                $fields[$key] = $value($value);
+            }
             $fields[$key] = $this->{$value};
         }
         $merged = callConfigFunction(config('laravel-sso.api.getMerged'), [
