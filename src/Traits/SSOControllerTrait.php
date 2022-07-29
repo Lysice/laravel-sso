@@ -10,6 +10,14 @@ use Lysice\LaravelSSO\Resources\UserResource;
 
 trait SSOControllerTrait
 {
+    public function loginQuery(Request $request, LaravelSSOServer $server)
+    {
+        return $server->loginQuery(
+            $request->get('data', []),
+            $request->get('extendData', null)
+        );
+    }
+
     /**
      * @param LaravelSSOServer $server
      * @return string

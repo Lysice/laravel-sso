@@ -11,6 +11,63 @@ use Lysice\SimpleSSO\Exceptions\SSOServerException;
 
 trait SSOServerTrait {
     /**
+     * @param array $data
+     * @param $extendData
+     * @return string
+     */
+    public function loginQuery($data = [], $extendData = []) {
+        try {
+            $this->startBrokerSession();
+
+            if (!$userId = $this->authenticateQuery($data)) {
+                $this->fail('User authentication failed.', false, Constants::CODE_AUTH_FAILED);
+            }
+        } catch (SSOServerException $e) {
+            return $this->returnJson(['error' => $e->getMessage(), 'code' => $e->getCode()]);
+        }
+
+        $this->setSessionData('sso_user', $userId);
+        // hack
+        event(new SSOLoginEvent($userId, $extendData));
+        return $this->userInfoMulti();
+    }
+
+    protected function authenticateQuery($data = [])
+    {
+        $where = [];
+        $userWhereQueryEnabled = config('laravel-sso.userWhereQueryEnabled');
+        foreach ($data as $key => $val) {
+            if ($userWhereQueryEnabled && $key == 'or') {
+                $where[] = function ($query) use ($val) {
+                    $first = true;
+                    foreach ($val as $i => $item) {
+                        if ($first) {
+                            $query->where($i, $item);
+                            $first = false;
+                        } else {
+                            $query->orWhere($i, $item);
+                        }
+                    }
+                };
+            } else {
+                $where[$key] = $val;
+            }
+        }
+
+        $commonWhere = config('laravel-sso.userWhere', $where);
+        $where = array_merge($commonWhere, $where);
+        if(!Auth::attempt($where)) {
+            return false;
+        }
+
+        $sessionId = $this->getBrokerSessionId();
+        $savedSessionId = $this->getBrokerSessionData($sessionId);
+        $this->startSession($savedSessionId);
+
+        return Auth::id();
+    }
+
+    /**
      * @param null|string $username
      * @param null|string $password
      * @param null|string $key

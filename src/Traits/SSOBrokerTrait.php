@@ -88,4 +88,24 @@ trait SSOBrokerTrait {
             return $this->getUserInfo();
         }
     }
+
+    /**
+     * Login client to SSO server with user credentials.
+     * @param array $data
+     * @param array $extendData
+     * @return bool
+     */
+    public function loginQuery(array $data = [], array $extendData = [])
+    {
+        $this->userInfo = $this->makeRequest('POST', 'loginQuery', [
+            'data' => $data,
+            'extendData' => $extendData
+        ]);
+
+        if (!isset($this->userInfo['error']) && isset($this->userInfo['data']['id'])) {
+            return true;
+        }
+
+        return false;
+    }
 }

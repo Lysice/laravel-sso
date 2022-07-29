@@ -33,6 +33,7 @@ return [
         'status' => 'normal'
     ],
     'userInfoWhereEnabled' => false,
+    'userWhereQueryEnabled' => true,
 
     // Logged in user fields sent to brokers.
     'userFields' => [
@@ -51,6 +52,8 @@ return [
     ],
 
     'multi_enabled' => env('SSO_MULTI_ENABLED', false),
+
+    'query_enabled' => env('SSO_QUERY_ENABLE', false),
     'redirectTo' => '/',
     'supports' => [
         'attach' => [
@@ -63,7 +66,8 @@ return [
     // server session expire time
     // default: 1 for one hour
     'expired_time' => env('SSO_BROKER_SESSION_EXPIRED_TIME', 1),
-
+    // 是否重置session的过期时间
+    'resetSessionTime' => env('SSO_RESET_SESSION_TIME', false),
 
     /*
      |--------------------------------------------------------------------------
