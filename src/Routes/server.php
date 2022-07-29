@@ -29,7 +29,7 @@ Route::middleware('api')->prefix('api/sso')->group(function () {
         Route::post('loginMulti', 'Lysice\LaravelSSO\Controllers\ServerController@loginMulti');
     } else if(config('laravel-sso.query_enabled')) {
         Route::post('loginQuery', 'Lysice\LaravelSSO\Controllers\ServerController@loginQuery');
-        Route::post('loginMulti', 'Lysice\LaravelSSO\Controllers\ServerController@loginMulti');
+        Route::get('userInfoMulti', 'Lysice\LaravelSSO\Controllers\ServerController@userInfoMulti');
     } else {
         Route::post('login', 'Lysice\LaravelSSO\Controllers\ServerController@login');
         Route::get('userInfo', 'Lysice\LaravelSSO\Controllers\ServerController@userInfo');
