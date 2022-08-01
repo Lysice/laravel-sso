@@ -98,6 +98,8 @@ trait SSOControllerTrait
                 'username',
                 []
             );
+        } else if (config('laravel-sso.query_enabled')) {
+            $result = $server->loginQuery(['username' => $user->username, 'password' => $password]);
         } else {
             $result = $server->login($user->username, $password);
         }
