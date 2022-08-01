@@ -84,9 +84,11 @@ trait SSOBrokerTrait {
     {
         if (config('laravel-sso.multi_enabled')) {
             return $this->getUserInfoMulti();
-        } else {
-            return $this->getUserInfo();
         }
+        if (config('laravel-sso.query_enabled')){
+            return $this->getUserInfoMulti();
+        }
+        return $this->getUserInfo();
     }
 
     /**
