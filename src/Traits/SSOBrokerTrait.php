@@ -6,7 +6,7 @@ trait SSOBrokerTrait {
     public function logoutWithCookie(Request $request)
     {
         $cookies = $request->cookie();
-        $this->makeRequest('POST', 'logout', [], $cookies);
+        $this->makeRequest('POST', 'logout', []);
     }
     /**
      * api check login. support for social sso check.
@@ -39,6 +39,10 @@ trait SSOBrokerTrait {
             'key' => $key,
             'extendData' => $extendData
         ]);
+
+        if (config('laravel-sso.loginReturnType') == 'array') {
+            return $this->userInfo;
+        }
 
         if (!isset($this->userInfo['error']) && isset($this->userInfo['data']['id'])) {
             return true;
@@ -103,7 +107,32 @@ trait SSOBrokerTrait {
             'data' => $data,
             'extendData' => $extendData
         ]);
+        if (config('laravel-sso.loginReturnType') == 'array') {
+            return $this->userInfo;
+        }
 
+        if (!isset($this->userInfo['error']) && isset($this->userInfo['data']['id'])) {
+            return true;
+        }
+
+        return false;
+    }
+
+    /**
+     * Login client to SSO server with user credentials.
+     *
+     * @param string $username
+     * @param string $password
+     *
+     * @return bool
+     */
+    public function login(string $username, string $password)
+    {
+        $this->userInfo = $this->makeRequest('POST', 'login', compact('username', 'password'));
+
+        if (config('laravel-sso.loginReturnType') == 'array') {
+            return $this->userInfo;
+        }
         if (!isset($this->userInfo['error']) && isset($this->userInfo['data']['id'])) {
             return true;
         }

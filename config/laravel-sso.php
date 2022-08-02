@@ -54,6 +54,8 @@ return [
     'multi_enabled' => env('SSO_MULTI_ENABLED', false),
 
     'query_enabled' => env('SSO_QUERY_ENABLE', false),
+    // 登录返回数据 支持bool(只返回true或false)/ array原样输出
+    'loginReturnType' => 'bool',
     'redirectTo' => '/',
     'supports' => [
         'attach' => [
