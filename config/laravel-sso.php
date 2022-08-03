@@ -52,15 +52,16 @@ return [
     ],
     'before' => [
         'query' => function ($credentials) {
-            
-            return true;
+
+//            return true;
         },
-//        'multi' => function ($credentials) { 
-            return true;
+//        'multi' => function ($credentials) {
+//            return true;
         // }
+
 //        'common' => function ($credentials) {
 
-            return true;
+//            return true;
         // }
     ],
 
