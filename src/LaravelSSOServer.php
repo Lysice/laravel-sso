@@ -70,6 +70,14 @@ class LaravelSSOServer extends SSOServer
     {
         $where = config('laravel-sso.userWhere');
         $where = array_merge($where, ['username' => $username, 'password' => $password]);
+
+        // validate before login attempt
+        $before = config('laravel-sso.before.common');
+        if (is_callable($before)) {
+            $before($where);
+        }
+
+        // attempt login user
         if (!Auth::attempt($where)) {
             return false;
         }

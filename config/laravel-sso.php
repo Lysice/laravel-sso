@@ -50,6 +50,19 @@ return [
         'has_blog' => 'has_blog',
         'blog_slug' => 'blog_slug'
     ],
+    'before' => [
+        'query' => function ($credentials) {
+            
+            return true;
+        },
+//        'multi' => function ($credentials) { 
+            return true;
+        // }
+//        'common' => function ($credentials) {
+
+            return true;
+        // }
+    ],
 
     'multi_enabled' => env('SSO_MULTI_ENABLED', false),
 

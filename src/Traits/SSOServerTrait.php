@@ -56,6 +56,14 @@ trait SSOServerTrait {
 
         $commonWhere = config('laravel-sso.userWhere', $where);
         $where = array_merge($commonWhere, $where);
+
+        // validate before login attempt
+        $before = config('laravel-sso.before.query');
+        if (is_callable($before)) {
+            $before($where);
+        }
+
+        // attempt login user
         if(!Auth::attempt($where)) {
             return false;
         }
@@ -120,6 +128,7 @@ trait SSOServerTrait {
             return $this->returnJson(['error' => $e->getMessage(), 'code' => $e->getCode()]);
         }
 
+        debug("userInfo", $user ? $user->toArray() : []);
         return $this->returnUserInfo($user);
     }
 
@@ -157,6 +166,14 @@ trait SSOServerTrait {
     {
         $where = config('laravel-sso.userWhere');
         $where = array_merge($where, [$key => $value, 'password' => $password]);
+
+        // validate before login attempt
+        $before = config('laravel-sso.before.multi');
+        if (is_callable($before)) {
+            $before($where);
+        }
+
+        // attempt login user
         if(!Auth::attempt($where)) {
             return false;
         }
