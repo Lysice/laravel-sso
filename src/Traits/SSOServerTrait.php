@@ -2,9 +2,12 @@
 
 namespace Lysice\LaravelSSO\Traits;
 
+use App\User;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Session;
 use Lysice\LaravelSSO\Events\SSOLoginEvent;
 use Lysice\SimpleSSO\Constants;
 use Lysice\SimpleSSO\Exceptions\SSOServerException;
@@ -19,20 +22,27 @@ trait SSOServerTrait {
         try {
             $this->startBrokerSession();
 
-            if (!$userId = $this->authenticateQuery($data)) {
-                $this->fail('User authentication failed.', false, Constants::CODE_AUTH_FAILED);
+            if (config('laravel-sso.usingUserId', false)) {
+                if (!$userId = $this->authenticateQuery($data, true)) {
+                    $this->fail('User authentication failed.', false, Constants::CODE_AUTH_FAILED);
+                }
+            } else {
+                if (!$userId = $this->authenticateQuery($data)) {
+                    $this->fail('User authentication failed.', false, Constants::CODE_AUTH_FAILED);
+                }
             }
         } catch (SSOServerException $e) {
             return $this->returnJson(['error' => $e->getMessage(), 'code' => $e->getCode()]);
         }
 
+        
         $this->setSessionData('sso_user', $userId);
         // hack
         event(new SSOLoginEvent($userId, $extendData));
         return $this->userInfoMulti();
     }
 
-    protected function authenticateQuery($data = [])
+    protected function authenticateQuery($data = [], $usingUserId = false)
     {
         $where = [];
         $userWhereQueryEnabled = config('laravel-sso.userWhereQueryEnabled');
@@ -63,9 +73,13 @@ trait SSOServerTrait {
             $before($where);
         }
 
-        // attempt login user
-        if(!Auth::attempt($where)) {
-            return false;
+        if ($usingUserId) {
+            $this->loginUsingUserId($where);
+        } else {
+            // attempt login user
+            if(!Auth::attempt($where)) {
+                return false;
+            }
         }
 
         $sessionId = $this->getBrokerSessionId();
@@ -73,6 +87,60 @@ trait SSOServerTrait {
         $this->startSession($savedSessionId);
 
         return Auth::id();
+    }
+
+    /**
+     * loginUsingUserId
+     * @param array $where
+     * @return bool
+     * @throws SSOServerException
+     */
+    private function loginUsingUserId($where = []) {
+        $model = config('laravel-sso.usersModel');
+
+        $password = '';
+        if (isset($where['password'])) {
+            $password = $where['password'];
+            unset($where['password']);
+        }
+
+        // select user by query
+        $user = $this->getUserByQuery($model, $where);
+        // validate if the user is empty
+        if (empty($user)) {
+            throw new SSOServerException("user not found", Constants::CODE_USER_NOT_FOUND);
+        }
+        // there is a password parameter provided in where condition but it does't match the user's password
+        if (!empty($password) && !Hash::check($password, $user->password)) {
+            throw new SSOServerException("password does't match.", Constants::CODE_PASSWORD_ERROR);
+        }
+
+        Auth::loginUsingId($user->id);
+        return true;
+    }
+
+    /**
+     * @param mixed $model userModel
+     * @param array $where
+     * @return mixed
+     * @throws SSOServerException
+     */
+    private function getUserByQuery($model = '', $where = []) {
+        if ($model == '') {
+            throw new SSOServerException("usersModel is't config");
+        }
+        $query = $model::query();
+        foreach ($where as $key => $val) {
+            if (is_array($val)) {
+                $query->whereIn($key, $val);
+            } else if (is_callable($val)) {
+                $val($query);
+            } else {
+                $query->where($key, $val);
+            }
+        }
+
+        return $query->first();
     }
 
     /**
