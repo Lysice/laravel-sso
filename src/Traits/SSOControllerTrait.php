@@ -10,6 +10,30 @@ use Lysice\LaravelSSO\Resources\UserResource;
 
 trait SSOControllerTrait
 {
+    /**
+     * custom query login method
+     * @param Request $request
+     * @param LaravelSSOServer $server
+     * @return mixed|string
+     */
+    public function customizeQuery(Request $request, LaravelSSOServer $server)
+    {
+        $validator = config('laravel-sso.validators.customizeQuery');
+        $data = $request->all();
+        if (isset($validator) && is_callable($validator)) {
+            try {
+                $data = $validator($request);
+            } catch (SSOServerException $exception) {
+                return $server->returnJson(['error' => $exception->getMessage(), 'code' => $exception->getCode()]);
+            }
+        }
+
+        return $server->loginQuery(
+            $data,
+            $request->get('extendData', [])
+        );
+    }
+    
     public function loginQuery(Request $request, LaravelSSOServer $server)
     {
         return $server->loginQuery(

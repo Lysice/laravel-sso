@@ -38,4 +38,7 @@ Route::middleware('api')->prefix('api/sso')->group(function () {
     if(config('laravel-sso.api.enabled')) {
         Route::post('check', 'Lysice\LaravelSSO\Controllers\ServerController@check');
     }
+    if(config('laravel-sso.customizeQueryEnabled')) {
+        Route::post('customizeQuery', 'Lysice\LaravelSSO\Controllers\ServerController@customizeQuery');
+    }
 });

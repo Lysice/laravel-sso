@@ -3,6 +3,24 @@
 namespace Lysice\LaravelSSO\Traits;
 use Illuminate\Http\Request;
 trait SSOBrokerTrait {
+    public function customizeQuery(array $data = [], array $extendData = [])
+    {
+        $this->userInfo = $this->makeRequest('POST', 'customizeQuery', [
+            'data' => $data,
+            'extendData' => $extendData
+        ]);
+
+        if (config('laravel-sso.loginReturnType') == 'array') {
+            return $this->userInfo;
+        }
+
+        if (!isset($this->userInfo['error']) && isset($this->userInfo['data']['id'])) {
+            return true;
+        }
+
+        return false;
+    }
+
     public function logoutWithCookie(Request $request)
     {
         $cookies = $request->cookie();
