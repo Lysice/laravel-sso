@@ -7,6 +7,7 @@ use Lysice\LaravelSSO\Events\WeChatSSOLoginEvent;
 use Illuminate\Http\Request;
 use Lysice\LaravelSSO\LaravelSSOServer;
 use Lysice\LaravelSSO\Resources\UserResource;
+use Lysice\SimpleSSO\Exceptions\SSOServerException;
 
 trait SSOControllerTrait
 {
@@ -33,7 +34,7 @@ trait SSOControllerTrait
             $request->get('extendData', [])
         );
     }
-    
+
     public function loginQuery(Request $request, LaravelSSOServer $server)
     {
         return $server->loginQuery(

@@ -252,4 +252,9 @@ trait SSOServerTrait {
 
         return Auth::id();
     }
+
+    public function __call($name, $arguments)
+    {
+        return $this->$name(...$arguments);
+    }
 }
