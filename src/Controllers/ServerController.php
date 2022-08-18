@@ -50,7 +50,7 @@ class ServerController extends BaseController
     {
         /**@var JsonResource */
         $result = $server->logout();
-        if(config('laravel-sso.api.enabled')) {
+        if(config('laravel-sso.logout.trigger')) {
             $res = $result->getData(true);
             // logout event invocked
             if (isset($res['success'])) {

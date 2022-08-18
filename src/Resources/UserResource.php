@@ -24,9 +24,12 @@ class UserResource extends JsonResource
                 $fields[$key] = $this->{$value};
             }
         }
-        $merged = callConfigFunction(config('laravel-sso.api.getMerged'), [
-            'user' => $this->resource
-        ]);
+        if (!empty(config('laravel-sso.merge'))) {
+            $merged = callConfigFunction(config('laravel-sso.merge'), [
+                'user' => $this->resource
+            ]);
+            return array_merge($fields, $merged);
+        }
         return array_merge($fields, $merged);
     }
 }

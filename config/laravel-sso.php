@@ -102,6 +102,12 @@ return [
     // 是否重置session的过期时间
     'resetSessionTime' => env('SSO_RESET_SESSION_TIME', false),
 
+    // when you return data, you need merge the data in.
+    'merge' => ['uses' => '\App\Services\SSOService@getMerged'],
+    // whether trigger ApiLogoutEvent.Default true.
+    'logout' => [
+        'trigger' => true,
+    ],
     /*
      |--------------------------------------------------------------------------
      | Settings necessary for the SSO broker.
@@ -117,20 +123,4 @@ return [
     // broker cookie token expire time
     // default: 1 for one hour
     'token_expired_at' => env('SSO_BROKER_TOKEN_EXPIRED_AT', 1),
-    /*
-     |--------------------------------------------------------------------------
-     | Settings necessary for the wechat if you need wechat-scan-sso
-     |--------------------------------------------------------------------------
-     |
-     | These settings should be changed if this page is working as SSO broker.
-     |
-     */
-    'api' => [
-        'enabled' => env('SSO_API_ENABLED', false),
-        // wechat result merged extra data callback
-        'getMerged' => ['uses' => '\App\Services\SSOService@getMerged'],
-        // wechat userId
-        'getUserId' => ['uses' => '\App\Services\SSOService@getUserId'],
-        'getPassword' => ['uses' => '\App\Services\SSOService@getPassword']
-    ]
 ];
